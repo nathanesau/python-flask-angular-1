@@ -9,7 +9,7 @@ db_url = 'localhost:5432'
 db_name = 'esna0001'
 db_user = 'esna0001'
 db_password = 'tablature'
-engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_url}/{db_name}')
+engine = create_engine(f'sqlite:///app.db')
 Session = sessionmaker(bind=engine)
 
 Base = declarative_base()

@@ -1,5 +1,3 @@
-# coding=utf-8
-
 from flask_cors import CORS
 from flask import Flask, jsonify, request, Response
 
@@ -8,6 +6,8 @@ from .entities.exam import Exam, ExamSchema
 
 import json
 import time
+import atexit
+import threading
 
 # creating the Flask application
 app = Flask(__name__)
@@ -34,7 +34,6 @@ def get_exams():
     session.close()
     return Response(json.dumps(exams))
 
-
 @app.route('/exams', methods=['POST'])
 def add_exam():
     # mount exam object
@@ -52,3 +51,33 @@ def add_exam():
     new_exam = ExamSchema().dump(exam).data
     session.close()
     return jsonify(new_exam), 201
+
+##################################
+## BACKGROUND PROCESS CODE      ##
+##################################
+
+def background_job():
+    global backgroundThread
+    global dataLock
+
+    with dataLock:
+        print('This job is run every 30 seconds.')
+    
+    # set the next thread to happen
+    backgroundThread = threading.Timer(30, background_job, ())
+    backgroundThread.start()
+
+# create a datalock
+dataLock = threading.Lock()
+
+# create a background scheduler running on background thread
+backgroundThread = threading.Thread()
+backgroundThread = threading.Timer(30, background_job, ())
+backgroundThread.start()
+
+##################################
+## END BACKGROUND PROCESS CODE  ##
+##################################
+
+if __name__ == "__main__":
+    app.run()

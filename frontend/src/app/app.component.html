@@ -1,4 +1,12 @@
 <div style="text-align:center">
+  <h1>Time</h1>
+</div>
+<h2>Here is the time: </h2>
+<div *ngIf="(time !== undefined)">
+  {{ time.time }}
+</div>
+
+<div style="text-align:center">
   <h1>Exams</h1>
 </div>
 <h2>Here are the exams created so far: </h2>

@@ -7,6 +7,7 @@ from .entities.entity import Session, engine, Base
 from .entities.exam import Exam, ExamSchema
 
 import json
+import time
 
 # creating the Flask application
 app = Flask(__name__)
@@ -15,6 +16,9 @@ CORS(app)
 # if needed, generate database schema
 Base.metadata.create_all(engine)
 
+@app.route('/time')
+def get_time():
+    return Response(json.dumps({'time': str(time.time()) }))
 
 @app.route('/exams')
 def get_exams():

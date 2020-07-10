@@ -2,6 +2,8 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {ExamsApiService} from './exams/exams-api.service';
 import {Exam} from './exams/exam.model';
+import {TimeService} from './time/time.service';
+import {Time} from './time/time.model';
 import { interval } from 'rxjs/observable/interval';
 
 @Component({
@@ -13,8 +15,11 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
   examsListSubs: Subscription;
   examsList: Exam[];
+  timeSubs: Subscription;
+  time: Time;
 
-  constructor(private examsApi: ExamsApiService) {
+  constructor(private examsApi: ExamsApiService,
+      private timeApi: TimeService) {
   }
 
   private updateSubs() {
@@ -25,6 +30,12 @@ export class AppComponent implements OnInit, OnDestroy {
         },
         console.error
     );
+    this.timeSubs = this.timeApi
+        .getTime()
+        .subscribe(res => {
+          this.time = res;
+        }),
+        console.error
   }
 
   ngOnInit() {
@@ -37,5 +48,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.examsListSubs.unsubscribe();
+    this.timeSubs.unsubscribe();
   }
 }
